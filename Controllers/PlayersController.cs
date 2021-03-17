@@ -25,19 +25,14 @@ namespace WebApiModelBase.Controllers
             return listPlayer;
         }
         [HttpGet("{id}")]
-
         public ActionResult Get(int id)
         {
-            var result = listPlayer.SingleOrDefault(p => p.PId == id);
+            var result = listPlayer.SingleOrDefault(n => listPlayer.IndexOf(n) == id);
             if (result == null)
             {
                 return NotFound();
             }
-            else
-            {
-                return Ok(result);
-            }
-
+            return Ok(result);
         }
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
@@ -54,19 +49,26 @@ namespace WebApiModelBase.Controllers
             }
 
         }
-        [HttpPost]
-        public ActionResult Insert([FromBody] Player p)
+        
+       
+        [HttpPut("{id}")]
+        public ActionResult put(int id, [FromBody] Player player)
         {
-            try
+            var result = listPlayer.SingleOrDefault(n => listPlayer.IndexOf(n) == id);
+            if (result != null)
             {
-                listPlayer.Add(p);
+                result.PId = player.PId;
+                result.PName = player.PName;
+                result.PTeam = player.PTeam;
+                result.PDOB = player.PDOB;
                 return NoContent();
             }
-            catch
+            else
             {
-                return NotFound();
+                return BadRequest("Not a valid Id");
             }
         }
+
 
     }
 }
